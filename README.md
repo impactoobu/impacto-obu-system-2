@@ -27,3 +27,4 @@ Versão funcional local para a IMPACTO OBU.
 
 Os dados ficam salvos no navegador do aparelho.
 Use o botão "Exportar backup" regularmente.
+Atualização
