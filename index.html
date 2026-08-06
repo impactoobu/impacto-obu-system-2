@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#111111">
+  <title>Impacto Manager</title>
+  <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+  <div id="toast" class="toast" hidden></div>
+
+  <section id="loginView" class="auth-wrap">
+    <div class="auth-card">
+      <div class="brand">
+        <div class="flower">🌸</div>
+        <h1>Impacto Manager</h1>
+        <p>Gestão da IMPACTO OBU</p>
+      </div>
+
+      <div class="notice">Versão local funcional — sem depender do Firebase.</div>
+
+      <form id="loginForm">
+        <label>E-mail
+          <input id="loginEmail" type="email" value="admin@impactoobu.com" required>
+        </label>
+        <label>Senha
+          <input id="loginPassword" type="password" required>
+        </label>
+        <button class="primary" type="submit">Entrar</button>
+      </form>
+
+      <button id="showSetup" class="link-btn" type="button">Criar primeiro administrador</button>
+
+      <form id="setupForm" hidden>
+        <label>Nome
+          <input id="setupName" value="Igor Urata" required>
+        </label>
+        <label>E-mail
+          <input id="setupEmail" type="email" value="admin@impactoobu.com" required>
+        </label>
+        <label>Senha
+          <input id="setupPassword" type="password" minlength="6" required>
+        </label>
+        <button class="primary" type="submit">Criar administrador</button>
+      </form>
+    </div>
+  </section>
+
+  <section id="appView" hidden>
+    <header class="topbar">
+      <div>
+        <strong>Impacto Manager</strong>
+        <small id="userName"></small>
+      </div>
+      <button id="logoutBtn" class="ghost">Sair</button>
+    </header>
+
+    <div class="layout">
+      <nav>
+        <button class="active" data-page="dashboard">Início</button>
+        <button data-page="students">Alunos</button>
+        <button data-page="attendance">Presença</button>
+        <button data-page="finance">Financeiro</button>
+      </nav>
+
+      <main>
+        <section id="dashboard" class="page active">
+          <div class="hero">
+            <p>IMPACTO OBU</p>
+            <h2 id="welcome">Olá 👋</h2>
+          </div>
+
+          <div class="metrics">
+            <article class="metric">
+              <span>Alunos ativos</span>
+              <strong id="mStudents">0</strong>
+            </article>
+            <article class="metric">
+              <span>Presentes hoje</span>
+              <strong id="mAttendance">0</strong>
+            </article>
+            <article class="metric">
+              <span>Recebido</span>
+              <strong id="mReceived">¥0</strong>
+            </article>
+            <article class="metric">
+              <span>Pendente</span>
+              <strong id="mPending">¥0</strong>
+            </article>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <h3>Ações rápidas</h3>
+            </div>
+            <div class="toolbar">
+              <button class="primary" id="quickStudent">Cadastrar aluno</button>
+              <button class="ghost" id="exportBtn">Exportar backup</button>
+              <button class="ghost" id="importBtn">Importar backup</button>
+              <input id="importFile" class="file-input" type="file" accept=".json">
+            </div>
+          </div>
+        </section>
+
+        <section id="students" class="page">
+          <div class="panel">
+            <div class="panel-head">
+              <h3>Alunos</h3>
+              <button id="newStudent" class="primary">+ Novo aluno</button>
+            </div>
+            <div class="toolbar">
+              <input id="searchStudent" placeholder="Buscar por nome, responsável ou telefone">
+            </div>
+            <div id="studentList" class="list"></div>
+          </div>
+        </section>
+
+        <section id="attendance" class="page">
+          <div class="panel">
+            <div class="panel-head">
+              <h3>Presença de hoje</h3>
+            </div>
+            <div class="toolbar">
+              <select id="attendanceStudent"></select>
+              <button id="markAttendance" class="primary">Registrar presença</button>
+            </div>
+            <div id="attendanceList" class="list"></div>
+          </div>
+        </section>
+
+        <section id="finance" class="page">
+          <div class="panel">
+            <div class="panel-head">
+              <h3>Mensalidades</h3>
+            </div>
+            <div id="financeList" class="list"></div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </section>
+
+  <dialog id="studentDialog">
+    <form id="studentForm">
+      <div class="dialog-head">
+        <h3 id="studentDialogTitle">Novo aluno</h3>
+        <button id="closeDialog" class="ghost" type="button">✕</button>
+      </div>
+
+      <input id="studentId" type="hidden">
+
+      <div class="grid2">
+        <label>Nome completo
+          <input id="studentName" required>
+        </label>
+
+        <label>Nome em japonês
+          <input id="studentNameJa">
+        </label>
+
+        <label>Turma
+          <select id="studentClass">
+            <option>Baby</option>
+            <option>Kids</option>
+            <option>Teen</option>
+            <option>Adult</option>
+          </select>
+        </label>
+
+        <label>Faixa
+          <select id="studentBelt">
+            <option>Branca</option>
+            <option>Azul</option>
+            <option>Roxa</option>
+            <option>Marrom</option>
+            <option>Preta</option>
+          </select>
+        </label>
+
+        <label>Responsável
+          <input id="studentResponsible">
+        </label>
+
+        <label>Telefone
+          <input id="studentPhone">
+        </label>
+
+        <label>Mensalidade (¥)
+          <input id="studentFee" type="number" min="0" value="8800">
+        </label>
+
+        <label>Vencimento
+          <input id="studentDueDay" type="number" min="1" max="31" value="10">
+        </label>
+      </div>
+
+      <label>Observações
+        <textarea id="studentNotes"></textarea>
+      </label>
+
+      <div class="actions">
+        <button id="deleteStudent" class="danger" type="button" hidden>Excluir</button>
+        <button class="primary" type="submit">Salvar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="./js/app.js"></script>
+</body>
+</html>
